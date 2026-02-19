@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { AnalyticsMetrics } from '@/services/mockData';
-import { Target, Clock, AlertTriangle } from 'lucide-react';
+import { Target, Clock } from 'lucide-react';
 
 interface RiskMetricsProps {
   metrics: AnalyticsMetrics;
