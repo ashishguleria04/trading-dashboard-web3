@@ -14,6 +14,7 @@ export interface Trade {
     duration: string; // e.g., "15m 30s"
     status: 'Closed' | 'Open';
     type: 'Market' | 'Limit' | 'Stop';
+    notes?: string;
 }
 
 export interface AnalyticsMetrics {
