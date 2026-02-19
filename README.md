@@ -2,8 +2,6 @@
 
 A modern, high-performance trading analytics dashboard built with Next.js and Tailwind CSS. This application provides traders with comprehensive insights into their trading performance, including PnL analysis, win/loss ratios, and detailed trade history.
 
-![Dashboard Preview](public/dashboard-preview.png)
-*(Note: Add a screenshot of your dashboard at `public/dashboard-preview.png` for a visual preview)*
 
 ## 🚀 Features
 
