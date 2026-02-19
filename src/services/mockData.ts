@@ -19,6 +19,7 @@ export interface Trade {
 export interface AnalyticsMetrics {
     totalPnL: number;
     totalVolume: number;
+    totalFees: number;
     winRate: number;
     totalTrades: number;
     avgWin: number;
@@ -28,6 +29,11 @@ export interface AnalyticsMetrics {
     profitFactor: number;
     longShortRatio: number; // % Long
     avgDuration: string;
+    orderTypeStats: {
+        Market: number;
+        Limit: number;
+        Stop: number;
+    };
 }
 
 const SYMBOLS = ['SOL-PERP', 'BTC-PERP', 'ETH-PERP', 'JUP-PERP', 'BONK-PERP'];
@@ -97,7 +103,8 @@ export const generateTrades = (count: number = 50): Trade[] => {
 export const calculateMetrics = (trades: Trade[]): AnalyticsMetrics => {
     if (trades.length === 0) {
         return {
-            totalPnL: 0, totalVolume: 0, winRate: 0, totalTrades: 0, avgWin: 0, avgLoss: 0, largestWin: 0, largestLoss: 0, profitFactor: 0, longShortRatio: 0, avgDuration: '0m'
+            totalPnL: 0, totalVolume: 0, totalFees: 0, winRate: 0, totalTrades: 0, avgWin: 0, avgLoss: 0, largestWin: 0, largestLoss: 0, profitFactor: 0, longShortRatio: 0, avgDuration: '0m',
+            orderTypeStats: { Market: 0, Limit: 0, Stop: 0 }
         };
     }
 
@@ -118,9 +125,16 @@ export const calculateMetrics = (trades: Trade[]): AnalyticsMetrics => {
     const longCount = closedTrades.filter(t => t.side === 'Long').length;
     const longShortRatio = (longCount / closedTrades.length) * 100;
 
+    const totalFees = closedTrades.reduce((acc, t) => acc + t.fee, 0);
+
+    const marketCount = closedTrades.filter(t => t.type === 'Market').length;
+    const limitCount = closedTrades.filter(t => t.type === 'Limit').length;
+    const stopCount = closedTrades.filter(t => t.type === 'Stop').length;
+
     return {
         totalPnL,
         totalVolume,
+        totalFees,
         winRate,
         totalTrades: closedTrades.length,
         avgWin,
@@ -129,6 +143,11 @@ export const calculateMetrics = (trades: Trade[]): AnalyticsMetrics => {
         largestLoss: Math.min(...losses.map(t => t.pnl), 0),
         profitFactor,
         longShortRatio,
-        avgDuration: '45m' // simplified, would calculate actual avg
+        avgDuration: '45m', // simplified
+        orderTypeStats: {
+            Market: (marketCount / closedTrades.length) * 100,
+            Limit: (limitCount / closedTrades.length) * 100,
+            Stop: (stopCount / closedTrades.length) * 100
+        }
     };
 };
